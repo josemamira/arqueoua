@@ -127,8 +127,7 @@
                     <div>
                         <div>
                             <label for="valor-periodo">Periodo:</label>
-                            <select id="valor-periodo">
-                                <option value="Arcaico">Arcaico</option>
+                            <select id="valor-periodo">                                
                                 <option value="Paleolítico">Paleolítico</option>
                                 <option value="Mesolitico">Mesolítico</option>
                                 <option value="Neolítico">Neolítico</option>
@@ -137,6 +136,7 @@
                                 <option value="Hierro">Hierro</option>
                                 <option value="Iberico">Ibérico</option>
                                 <option value="Fenicio">Fenicio</option>
+                                <option value="Arcaico">Arcaico</option>
                                 <option value="Punico">Púnico</option>
                                 <option value="Romano - Republicano">Romano - Republicano</option>
                                 <option value="Romano - Imperial" selected>Romano - Imperial</option>
@@ -238,8 +238,8 @@
 
                     // Crear la leyenda
                     const legend = document.getElementById('legend');
-                    const types = ['Arcaico', 'Paleolítico', 'Bronce', 'Hierro', 'Ibérico', 'Fenicio', 'Púnico', 'Romano - Republicano', 'Romano - Imperial', 'Otros'];
-                    const colors = ['#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#d9d9d9'];
+                    const types = [ 'Paleolítico','Bronce', 'Hierro', 'Ibérico', 'Fenicio', 'Arcaico','Púnico', 'Romano - Republicano', 'Romano - Imperial', 'Otros'];
+                    const colors = ['#1f78b4',    '#b2df8a','#33a02c','#fb9a99', '#e31a1c', '#a6cee3','#fdbf6f', '#ff7f00', '#cab2d6', '#d9d9d9'];
 
                     legend.innerHTML = '<h4>Periodos</h4>';
                     types.forEach((type, index) => {
