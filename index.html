@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Yacimientos arqueológicos</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+
+
+
+        .map-overlay {
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            position: absolute;
+            width: 21.8%;
+            top: 0;
+            left: 0;
+            padding: 10px;
+        }
+
+        .map-overlay .map-overlay-inner {
+            background-color: #fff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .map-overlay input {
+            margin: 2px;
+        }
+
+        #filter-result {
+            font-size: 8px;
+            font-family: "Courier New";
+        }
+
+        .legend {
+            background-color: white;
+            border-radius: 3px;
+            bottom: 30px;
+            padding: 10px;
+            position: absolute;
+
+            left: 10px;
+            z-index: 1;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .legend h4 {
+            margin: 0 0 5px;
+        }
+
+        .legend div {
+            display: flex;
+            align-items: center;
+        }
+
+        .legend span {
+            height: 10px;
+            width: 10px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="legend" class="legend"></div>
+
+
+
+    <div class="map-overlay top">
+        <div class="map-overlay-inner">
+            <nav id="nav-filter">
+
+                <fieldset>
+                    <legend>🫨 Tipología</legend>
+                    <div>
+                        <input id="tipo" type="checkbox" />
+                        <label for="tipo">Aplicar filtro por <code>tipología</code> </label>
+                        <div>
+                            <div>
+                                <label for="valor-tipo">Tipología:</label>
+                                <select id="valor-tipo">
+                                    <option value="Abrigo">Abrigo</option>
+                                    <option value="Alfar">Alfar</option>
+                                    <option value="Campamento al aire libre">Campamento al aire libre</option>
+                                    <option value="Abrigo">Abrigo</option>
+                                    <option value="Castellum">Castellum</option>
+                                    <option value="Castillo">Castillo</option>
+                                    <option value="Cueva">Cueva</option>
+                                    <option value="Habitat concentrado">Hábitat concentrado</option>
+                                    <option value="Habitat disperso">Hábitat disperso</option>
+                                    <option value="Necropolis">Necrópolis</option>
+                                    <option value="Pecio">Pecio</option>
+                                    <option value="Poblado" selected>Poblado</option>
+                                    <option value="Poblado en altura">Poblado en altura</option>
+                                    <option value="Santuario">Santuario</option>
+                                    <option value="Torre">Torre</option>
+                                    <option value="Villae">Villae</option>
+                                </select>
+
+                            </div>
+                        </div>
+                </fieldset>
+
+                <legend>📈 Periodo</legend>
+                <div>
+                    <input id="periodo" type="checkbox" />
+                    <label for="periodo">Aplicar filtro por <code>periodo</code> </label>
+                    <div>
+                        <div>
+                            <label for="valor-periodo">Periodo:</label>
+                            <select id="valor-periodo">
+                                <option value="Arcaico">Arcaico</option>
+                                <option value="Paleolítico">Paleolítico</option>
+                                <option value="Mesolitico">Mesolítico</option>
+                                <option value="Neolítico">Neolítico</option>
+                                <option value="Calcolitico">Calcolítico</option>
+                                <option value="Bronce">Bronce</option>
+                                <option value="Hierro">Hierro</option>
+                                <option value="Iberico">Ibérico</option>
+                                <option value="Fenicio">Fenicio</option>
+                                <option value="Punico">Púnico</option>
+                                <option value="Romano - Republicano">Romano - Republicano</option>
+                                <option value="Romano - Imperial" selected>Romano - Imperial</option>
+                                <option value="Tardoantiguo">Tardoantiguo</option>
+                                <option value="Medieval">Medieval</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    </fieldset>
+            </nav>
+            <!-- <hr />
+        <div id='filter-result'>["all"]</div>-->
+        </div>
+    </div>
+
+
+    <script>
+        const data = {};
+
+        var map = new maplibregl.Map({
+            container: 'map',
+            style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=pXqZoLXkpIfigfdKwQ6Q',
+            //style: 'https://demotiles.maplibre.org/style.json', // style URL                
+            center: [3, 42],
+            zoom: 5
+        });
+
+
+
+        // Agrega los puntos del archivo GeoJSON
+        map.on('load', () => {
+            fetch('data/yacimientos.geojson')
+                .then(response => response.json())
+                .then(data => {
+                    map.addSource('yacimientos', {
+                        'type': 'geojson',
+                        'data': data
+                    });
+                    /*        
+                    // Añadir iconos personalizados
+                    const iconos = {
+                        'tipo1': 'url_del_icono1', // Reemplaza con las URLs o rutas de tus iconos
+                        'tipo2': 'url_del_icono2',
+                        'tipo3': 'url_del_icono3'
+                    };
+        
+                    // Añadir imágenes al mapa
+                    for (const [tipo, url] of Object.entries(iconos)) {
+                        map.loadImage(url, (error, image) => {
+                            if (error) throw error;
+                            map.addImage(tipo, image);
+                        });
+                    }*/
+
+                    map.addLayer({
+                        'id': 'yacimientos',
+                        'type': 'circle',
+                        'source': 'yacimientos',
+                        /*'layout': {
+                            'icon-image': ['get', 'tipo'], // Usar el atributo 'tipo' para seleccionar el icono
+                            'icon-size': 0.1 // Ajusta el tamaño del icono según sea necesario
+                        }*/
+                        'paint': {
+                            'circle-radius': 8,
+                            /*'circle-color': '#B42222'*/
+                            'circle-stroke-width': 1,
+                            'circle-stroke-color': '#000000',
+                            'circle-color': [
+                                'match',
+                                ['get', 'periodo_1'],
+                                'Arcaico', '#a6cee3',
+                                'Paleolitico', '#1f78b4',
+                                'Bronce', '#b2df8a',
+                                'Hierro', '#33a02c',
+                                'Iberico', '#fb9a99',
+                                'Fenicio', '#e31a1c',
+                                'Punico', '#fdbf6f',
+                                'Romano - Republicano', '#ff7f00',
+                                'Romano - Imperial', '#cab2d6',
+								/* other */ '#d9d9d9'
+                            ]
+                        }
+                    });
+
+
+                    // Añadir una capa de etiquetas
+                    map.addLayer({
+                        'id': 'yacimientos-labels',
+                        'type': 'symbol',
+                        'source': 'yacimientos',
+                        'layout': {
+                            'text-field': ['get', 'yacimiento'],
+                            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+                            'text-offset': [0, 1.25],
+                            'text-anchor': 'top'
+                        }
+                    });
+
+                    // Crear la leyenda
+                    const legend = document.getElementById('legend');
+                    const types = ['Arcaico', 'Paleolítico', 'Bronce', 'Hierro', 'Ibérico', 'Fenicio', 'Púnico', 'Romano - Republicano', 'Romano - Imperial', 'Otros'];
+                    const colors = ['#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#d9d9d9'];
+
+                    legend.innerHTML = '<h4>Periodos</h4>';
+                    types.forEach((type, index) => {
+                        const color = colors[index];
+                        const item = document.createElement('div');
+                        item.innerHTML = `<span style="background-color: ${color};"></span>${type}`;
+                        legend.appendChild(item);
+                    });
+
+
+
+                    // Opcional: Agrega un popup al hacer clic en un punto
+                    map.on('click', 'yacimientos', (e) => {
+                        var enlace = '';
+                        if (e.features[0].properties.enlace == null) { enlace = ''; } else { enlace = '<a href="' + e.features[0].properties.enlace + '" target="_blank">enlace</a>'; }
+                        if (e.features[0].properties.tipologi_1 == null) { tipo2 = ''; } else { tipo2 = e.features[0].properties.tipologi_1; }
+                        if (e.features[0].properties.periodo_2 == null) { periodo2 = ''; } else { periodo2 = e.features[0].properties.periodo_2; }
+                        new maplibregl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML('<h3>' + e.features[0].properties.yacimiento + '</h3><p><ul>' +
+                                '<li>Municipio: <b>' + e.features[0].properties.municipio + '</b></li>' +
+                                '<li>País: <b>' + e.features[0].properties.pais + '</b></li>' +
+                                '<li>Tipología :<b>' + e.features[0].properties.tipologia + '</b></li>' +
+                                '<li>Tipología 2: <b>' + tipo2 + '</b></li>' +
+                                '<li>Periodo: <b>' + e.features[0].properties.periodo_1 + '</b></li>' +
+                                '<li>Periodo 2: <b>' + periodo2 + '</b></li>' +
+                                '<li>Enlace: ' + enlace + '</li>' +
+                                //'<li>Enlace: <a href="'+e.features[0].properties.enlace+'">'+e.features[0].properties.enlace+'</a></li>'+                            
+                                '</ul></p>')
+                            .addTo(map);
+                    });
+
+                    // Cambia el cursor a una mano cuando el ratón pasa por encima de los puntos
+                    map.on('mouseenter', 'points', () => {
+                        map.getCanvas().style.cursor = 'pointer';
+                    });
+
+                    // Cambia el cursor de nuevo cuando el ratón deja de estar sobre los puntos
+                    map.on('mouseleave', 'points', () => {
+                        map.getCanvas().style.cursor = '';
+                    });
+                });
+        });
+
+        document.getElementById('nav-filter').addEventListener('change', (e) => {
+            let filterOnValue = ['all'];
+            let operator = '==';
+
+            switch (e.target.id) {
+                /// example: `map.setFilter("earthquakes", ["any", [">", "felt", 16.0]])`
+                case 'tipo':
+                    valorTipo = document.getElementById('valor-tipo');
+                    operator = '==';
+                    e.target.checked ? data.tipologia = valorTipo.value : delete data['tipologia'];
+                    break;
+
+                case 'periodo':
+                    valorPeriodo = document.getElementById('valor-periodo');
+                    operator = '==';
+                    e.target.checked ? data.periodo_1 = valorPeriodo.value : delete data['periodo_1'];
+                    break;
+
+                default:
+                    console.log('default');
+            }
+
+            filterOnValue = Object.keys(data);
+
+            mapLibreFilterSpread = ['all', ...filterOnValue.map(id => [operator, id, data[id]])];
+            mapLibreFilter = mapLibreFilterSpread;
+
+            //document.getElementById('filter-result').textContent = JSON.stringify(mapLibreFilter);
+            
+            map.setFilter('yacimientos', mapLibreFilter);
+            console.log(mapLibreFilter);
+        });
+
+
+
+
+
+    </script>
+</body>
+
+</html>
