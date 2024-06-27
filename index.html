@@ -273,12 +273,12 @@
                     });
 
                     // Cambia el cursor a una mano cuando el ratón pasa por encima de los puntos
-                    map.on('mouseenter', 'points', () => {
+                    map.on('mouseenter', 'yacimientos', () => {
                         map.getCanvas().style.cursor = 'pointer';
                     });
 
                     // Cambia el cursor de nuevo cuando el ratón deja de estar sobre los puntos
-                    map.on('mouseleave', 'points', () => {
+                    map.on('mouseleave', 'yacimientos', () => {
                         map.getCanvas().style.cursor = '';
                     });
                 });
