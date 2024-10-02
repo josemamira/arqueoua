@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="Capa_1"
+   data-name="Capa 1"
+   version="1.1"
+   viewBox="0 0 41.999998 42.000005"
+   sodipodi:docname="02_Prehistoria_BN.svg"
+   width="42"
+   height="42.000004"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview10"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="12.946787"
+     inkscape:cx="19.425669"
+     inkscape:cy="20.970453"
+     inkscape:window-width="1920"
+     inkscape:window-height="1019"
+     inkscape:window-x="0"
+     inkscape:window-y="30"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Capa_1-2" />
+  <defs
+     id="defs4">
+    <style
+       id="style2">
+      .cls-1 {
+        fill: #000;
+        fill-rule: evenodd;
+        stroke: #2b2a29;
+        stroke-miterlimit: 10;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <g
+     id="Capa_1-2"
+     data-name="Capa_1"
+     transform="translate(6.7257123,-2.7304)">
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.81807px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M -3.7372771,3.8427135 11.827289,41.35657 l 4.328122,0.861751 1.558648,-6.03473 8.747332,7.277052 2.306374,-2.672432 -4.209382,-8.221475 7.525814,-4.822128 L -2.7180556,3.9802212 Z"
+       id="path1123" />
+  </g>
+</svg>
