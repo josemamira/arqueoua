@@ -242,27 +242,6 @@
                         'data': data
                     });
 
-                    // Añadir iconos personalizados
-                    /*const icons = {                       
-                        'Arcaico': 'img/png/01_ArteRupestre_BN.png',
-                        'Paleolitico': 'img/png/02_Prehistoria_BN.png',
-                        'Mesolitico': 'img/png/02_Prehistoria_BN.png',
-                        'Neolitico': 'img/png/02_Prehistoria_BN.png',
-                        'Calcolitico': 'img/png/02_Prehistoria_BN.png',
-                        'Bronce': 'img/png/02_Prehistoria_BN.png',
-                        'Hierro': 'img/png/03_Protohistoria.png',
-                        'Mesolitico': 'img/png/02_Prehistoria_BN.png',
-                        'Iberico': 'img/png/03_Protohistoria.png',
-                        'Fenicio': 'img/png/04_Griego.png',
-                        'Punico': 'img/png/04_Griego.png',
-                        'Romano - Republicano': 'img/png/05_Romano.png',
-                        'Romano - Imperial': 'img/png/05_Romano.png',
-                        'Tardoantiguo': 'img/png/06_EdadMedia.png',
-                        'Medieval': 'img/png/06_EdadMedia.png',
-                        //'img/png/08_Contemporaneo.png' 
-                    };*/
-
-
                     // Añadir una capa de etiquetas
                     map.addLayer({
                         'id': 'yacimientos-labels',
@@ -407,41 +386,6 @@
                         }
                     });
 
-
-
-                    /*
-                    legend.innerHTML = '<h4>Periodos '+kk+'</h4>';
-                    types.forEach((type, index) => {
-                        const color = colors[index];
-                        const item = document.createElement('div');
-                        item.innerHTML = `<span style="background-color: ${color};"></span>${type}`;
-                        legend.appendChild(item);
-                    });*/
-
-
-
-                    // Opcional: Agrega un popup al hacer clic en un punto
-                    /*map.on('click', 'yacimientos', (e) => {
-                        var enlace = '';
-                        if (e.features[0].properties.enlace == null) { enlace = ''; } else { enlace = '<a href="' + e.features[0].properties.enlace + '" target="_blank">enlace</a>'; }
-                        if (e.features[0].properties.tipologi_1 == null) { tipo2 = ''; } else { tipo2 = e.features[0].properties.tipologi_1; }
-                        if (e.features[0].properties.periodo_2 == null) { periodo2 = ''; } else { periodo2 = e.features[0].properties.periodo_2; }
-                        new maplibregl.Popup()
-                            .setLngLat(e.lngLat)
-                            .setHTML('<h3>' + e.features[0].properties.yacimiento + '</h3><p><ul>' +
-                                '<li>Municipio: <b>' + e.features[0].properties.municipio + '</b></li>' +
-                                '<li>País: <b>' + e.features[0].properties.pais + '</b></li>' +
-                                '<li>Tipología :<b>' + e.features[0].properties.tipologia + '</b></li>' +
-                                '<li>Tipología 2: <b>' + tipo2 + '</b></li>' +
-                                '<li>Periodo: <b>' + e.features[0].properties.periodo_1 + '</b></li>' +
-                                '<li>Periodo 2: <b>' + periodo2 + '</b></li>' +
-                                '<li>Enlace: ' + enlace + '</li>' +
-                                //'<li>Enlace: <a href="'+e.features[0].properties.enlace+'">'+e.features[0].properties.enlace+'</a></li>'+                            
-                                '</ul></p>')
-                            .addTo(map);
-                    });*/
-
-
                     map.on('click', 'yacimientos', (e) => {
                         const feature = e.features[0];
                         var enlace = '';
@@ -467,11 +411,6 @@
                         `;
                         sidebar.classList.add('open');
                     });
-
-
-
-
-
 
 
                     // Cambia el cursor a una mano cuando el ratón pasa por encima de los puntos
@@ -523,11 +462,7 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.remove('open');
         });
-
-
-
-
-
+	    
     </script>
 </body>
 
