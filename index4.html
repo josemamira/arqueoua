@@ -308,12 +308,6 @@
 
             map.on('click', 'unclustered-point', (e) => {
                 const feature = e.features[0];
-                /*var enlace = '';
-                if (feature.properties.enlace == null) { enlace = ''; } else { enlace = '<a href="' + feature.properties.enlace + '" target="_blank">enlace</a>'; }
-                if (feature.properties.tipologi_1 == null) { tipo2 = ''; } else { tipo2 = feature.properties.tipologi_1; }
-                if (feature.properties.periodo_2 == null) { periodo2 = ''; } else { periodo2 = feature.properties.periodo_2; }*/
-
-
                 const sidebar = document.getElementById('sidebar');
                 const sidebarTitle = document.getElementById('sidebar-title');
                 sidebarTitle.innerHTML = `
@@ -332,14 +326,7 @@
             });
 
 
-            // fin pruebas
-
-
-
-
-
-
-            //Create a new instance of the SVG manager.
+           //Create a new instance of the SVG manager.
             svgManager = new maplibregl.SvgManager(map);
             //Load an SVG templated icon into the map.
             svgManager.add('rupestre', 'img/svg/01_ArteRupestre_BN.svg');
@@ -359,27 +346,6 @@
                         'type': 'geojson',
                         'data': data
                     });
-
-                    // Añadir iconos personalizados
-                    /*const icons = {                       
-                        'Arcaico': 'img/png/01_ArteRupestre_BN.png',
-                        'Paleolitico': 'img/png/02_Prehistoria_BN.png',
-                        'Mesolitico': 'img/png/02_Prehistoria_BN.png',
-                        'Neolitico': 'img/png/02_Prehistoria_BN.png',
-                        'Calcolitico': 'img/png/02_Prehistoria_BN.png',
-                        'Bronce': 'img/png/02_Prehistoria_BN.png',
-                        'Hierro': 'img/png/03_Protohistoria.png',
-                        'Mesolitico': 'img/png/02_Prehistoria_BN.png',
-                        'Iberico': 'img/png/03_Protohistoria.png',
-                        'Fenicio': 'img/png/04_Griego.png',
-                        'Punico': 'img/png/04_Griego.png',
-                        'Romano - Republicano': 'img/png/05_Romano.png',
-                        'Romano - Imperial': 'img/png/05_Romano.png',
-                        'Tardoantiguo': 'img/png/06_EdadMedia.png',
-                        'Medieval': 'img/png/06_EdadMedia.png',
-                        //'img/png/08_Contemporaneo.png' 
-                    };*/
-
 
                     // Añadir una capa de etiquetas
                     map.addLayer({
@@ -425,30 +391,14 @@
                                 'Romano - Imperial', 'romano',
                                 'Tardoantiguo', 'media',
                                 'Medieval', 'media',
-								/* else */ 'contemporaneo' // Valor por defecto si no hay coincidencia
+				/* else */ 'contemporaneo' // Valor por defecto si no hay coincidencia
                             ],
                             'icon-size': 0.75
                         }
                     });
 
-                    /*        
-                    // Añadir imágenes al mapa
-                    Object.keys(icons).forEach(key => {
-                        map.loadImage(icons[key], (error, image) => {
-                            if (error) throw error;
-                            map.addImage(key, image);
-                        });
-                    });
-                    map.addLayer({
-                        id: 'yacimientos',
-                        type: 'symbol',
-                        source: 'yacimientos',
-                        layout: {
-                            'icon-image': ['get', 'periodo_1'],
-                            'icon-size': 1
-                        }
-                    });*/
-
+		   // Yacimientos UA
+              
                     map.addLayer({
                         'id': 'yacimientos_circulos',
                         'type': 'circle',
@@ -480,8 +430,6 @@
                         }
                     });
 
-
-
                     // Crear la leyenda
                     const legend = document.getElementById('legend');
                     const types = ['Arte rupestre', 'Prehistoria', 'Protohistoria', 'Griego', 'Romano', 'Edad media', 'Moderno', 'Contemporáneo', 'Otros'];
@@ -496,14 +444,13 @@
                         'img/png/08_Contemporaneo.png',
                         'img/png/otros.png'];
 
-
-                    var kk = '';
+                    var masmenos = '';
                     map.on('zoomend', function () {
 
                         //console.log('sin nivel de zoom');
                         if (map.getZoom() < 8) {
-                            kk = 'menor';
-                            legend.innerHTML = '<h4>Periodos ' + kk + '</h4>';
+                            masmenos = 'menor';
+                            legend.innerHTML = '<h4>Periodos ' + masmenos + '</h4>';
                             types.forEach((type, index) => {
                                 const color = colors[index];
                                 const item = document.createElement('div');
@@ -512,8 +459,8 @@
                             });
 
                         } else {
-                            kk = 'mayor';
-                            legend.innerHTML = '<h4>Periodos ' + kk + '</h4>';
+                            masmenos = 'mayor';
+                            legend.innerHTML = '<h4>Periodos ' + v + '</h4>';
                             types.forEach((type, index) => {
                                 const color = colors[index];
                                 const image = images[index];
@@ -524,17 +471,6 @@
                             });
                         }
                     });
-
-
-
-                    /*
-                    legend.innerHTML = '<h4>Periodos '+kk+'</h4>';
-                    types.forEach((type, index) => {
-                        const color = colors[index];
-                        const item = document.createElement('div');
-                        item.innerHTML = `<span style="background-color: ${color};"></span>${type}`;
-                        legend.appendChild(item);
-                    });*/
 
 
 
@@ -615,10 +551,6 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.remove('open');
         });
-
-
-
-
 
     </script>
 </body>
