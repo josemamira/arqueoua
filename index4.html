@@ -449,8 +449,8 @@
 
                         //console.log('sin nivel de zoom');
                         if (map.getZoom() < 8) {
-                            masmenos = 'menor';
-                            legend.innerHTML = '<h4>Periodos ' + masmenos + '</h4>';
+                            //masmenos = 'menor';
+                            legend.innerHTML = '<h4>Periodos </h4>';
                             types.forEach((type, index) => {
                                 const color = colors[index];
                                 const item = document.createElement('div');
@@ -459,8 +459,8 @@
                             });
 
                         } else {
-                            masmenos = 'mayor';
-                            legend.innerHTML = '<h4>Periodos ' + v + '</h4>';
+                            //masmenos = 'mayor';
+                            legend.innerHTML = '<h4>Periodos </h4>';
                             types.forEach((type, index) => {
                                 const color = colors[index];
                                 const image = images[index];
