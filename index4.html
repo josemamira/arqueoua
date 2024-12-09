@@ -291,8 +291,8 @@
                 }
             });
 
-            // inspect a cluster on click
-            map.on('click', 'clusters', async (e) => {
+            // inspect a cluster on click. No funciona. comentado
+            /*map.on('click', 'clusters', async (e) => {
                 const features = map.queryRenderedFeatures(e.point, {
                     layers: ['clusters']
                 });
@@ -302,7 +302,7 @@
                     center: features[0].geometry.coordinates,
                     zoom
                 });
-            });
+            });*/
 
 
 
