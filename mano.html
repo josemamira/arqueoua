@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa con escultura 3D - mano de Azorín</title>
+    <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css' />
+    <script src='https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js'></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px 15px;
+            background-color: rgba(0, 123, 255, 0.8);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: rgba(0, 123, 255, 1);
+        }
+    </style>
+</head>
+<body>
+
+    <script src="https://unpkg.com/three@0.147.0/build/three.min.js"></script>
+	<script src="https://unpkg.com/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+	
+	<div id="map"></div>
+    <button class="btn" onclick="flyToLocation()">Ir a Ubicación 3D</button>
+
+    <script>
+        // Inicializar el mapa con MapLibre GL JS
+        const map = new maplibregl.Map({
+            container: 'map',
+            //style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', // Estilo basado en OSM
+            style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=pXqZoLXkpIfigfdKwQ6Q',
+            center: [-0.513794,38.38449], // Coordenadas iniciales (Hamburgo)
+            zoom: 15,
+            pitch: 0,
+            bearing: 0
+        });
+
+        // Agregar controles de navegación
+        map.addControl(new maplibregl.NavigationControl());
+
+        function flyToLocation() {
+            map.flyTo({
+                center: [-0.5111639,38.3856093], // Coordenadas de la Torre Eiffel
+                zoom: 21,
+                bearing: 45, // Rotar el mapa
+                pitch: 60, // Inclinación para vista 3D
+                speed: 1.2, // Velocidad del vuelo
+                curve: 1.5, // Suavidad del movimiento
+                easing: (t) => t
+            });
+        }
+
+
+
+    // parameters to ensure the model is georeferenced correctly on the map
+    const modelOrigin = [-0.5111639,38.3856093];
+    const modelAltitude = 0;
+    const modelRotate = [Math.PI / 2, 0, 0];
+
+    const modelAsMercatorCoordinate = maplibregl.MercatorCoordinate.fromLngLat(
+        modelOrigin,
+        modelAltitude
+    );
+
+
+    // transformation parameters to position, rotate and scale the 3D model onto the map
+    const modelTransform = {
+        translateX: modelAsMercatorCoordinate.x,
+        translateY: modelAsMercatorCoordinate.y,
+        translateZ: modelAsMercatorCoordinate.z,
+        rotateX: modelRotate[0],
+        rotateY: modelRotate[1],
+        rotateZ: modelRotate[2],
+        /* Since our 3D model is in real world meters, a scale transform needs to be
+        * applied since the CustomLayerInterface expects units in MercatorCoordinates.
+        */
+        scale: modelAsMercatorCoordinate.meterInMercatorCoordinateUnits()
+    };
+
+    const THREE = window.THREE;
+
+    // configuration of the custom layer for a 3D model per the CustomLayerInterface
+    const customLayer = {
+        id: '3d-model',
+        type: 'custom',
+        renderingMode: '3d',
+        onAdd (map, gl) {
+            this.camera = new THREE.Camera();
+            this.scene = new THREE.Scene();
+
+            // create two three.js lights to illuminate the model
+            const directionalLight = new THREE.DirectionalLight(0xffffff);
+            directionalLight.position.set(0, -70, 100).normalize();
+            this.scene.add(directionalLight);
+
+            const directionalLight2 = new THREE.DirectionalLight(0xffffff);
+            directionalLight2.position.set(0, 70, 100).normalize();
+            this.scene.add(directionalLight2);
+
+            // use the three.js GLTF loader to add the 3D model to the three.js scene
+            const loader = new THREE.GLTFLoader();
+            loader.load(
+                'data/scene.gltf',
+                (gltf) => {
+                    this.scene.add(gltf.scene);
+                }
+            );
+            this.map = map;
+
+            // use the MapLibre GL JS map canvas for three.js
+            this.renderer = new THREE.WebGLRenderer({
+                canvas: map.getCanvas(),
+                context: gl,
+                antialias: true
+            });
+
+            this.renderer.autoClear = false;
+        },
+        render (gl, matrix) {
+            const rotationX = new THREE.Matrix4().makeRotationAxis(
+                new THREE.Vector3(1, 0, 0),
+                modelTransform.rotateX
+            );
+            const rotationY = new THREE.Matrix4().makeRotationAxis(
+                new THREE.Vector3(0, 1, 0),
+                modelTransform.rotateY
+            );
+            const rotationZ = new THREE.Matrix4().makeRotationAxis(
+                new THREE.Vector3(0, 0, 1),
+                modelTransform.rotateZ
+            );
+
+            const m = new THREE.Matrix4().fromArray(matrix);
+            const l = new THREE.Matrix4()
+                .makeTranslation(
+                    modelTransform.translateX,
+                    modelTransform.translateY,
+                    modelTransform.translateZ
+                )
+                .scale(
+                    new THREE.Vector3(
+                        modelTransform.scale,
+                        -modelTransform.scale,
+                        modelTransform.scale
+                    )
+                )
+                .multiply(rotationX)
+                .multiply(rotationY)
+                .multiply(rotationZ);
+
+            this.camera.projectionMatrix = m.multiply(l);
+            this.renderer.resetState();
+            this.renderer.render(this.scene, this.camera);
+            this.map.triggerRepaint();
+        }
+    };
+
+    map.on('style.load', () => {
+        map.addLayer(customLayer);
+    });
+
+
+    </script>
+
+</body>
+</html>
+
