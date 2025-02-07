@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa con MapLibre y Terrain Quantized Mesh</title>
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/@mapbox/mapbox-gl-terrain@0.1.0"></script>
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <script>
+        // Clave de MapTiler (cambia si tienes otra clave)
+        const MAPTILER_KEY = 'FarArRCYRxNEd0LV6d95';
+        const TILESET_URL = 'https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/{z}/{x}/{y}.quantized-mesh-1.0?key=FarArRCYRxNEd0LV6d95';
+
+        // Inicializa el mapa con MapLibre GL
+        const map = new maplibregl.Map({
+            container: "map",
+            style: `https://api.maptiler.com/maps/streets/style.json?key=${MAPTILER_KEY}`,
+            center: [-3.7038, 40.4168], // Madrid, España
+            zoom: 10,
+            pitch: 60, // Inclinación para ver en 3D
+            bearing: 0,
+            antialias: true
+        });
+
+        // Agregar controles de navegación
+        map.addControl(new maplibregl.NavigationControl());
+
+        // Esperar a que el mapa cargue
+        map.on("load", () => {
+            // Habilitar terreno con el Quantized Mesh
+            map.addSource("terrain", {
+                type: "raster-dem",
+                tiles: [TILESET_URL],
+                tileSize: 256,
+                maxzoom: 14
+            });
+
+            // Aplicar el terreno al mapa
+            map.setTerrain({ source: "terrain", exaggeration: 1.5 });
+        });
+    </script>
+
+</body>
+</html>
+
